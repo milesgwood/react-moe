@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import SongInfo from './Components/SongInfo';
+import Controls from './Components/Controls';
 import ReactAudioPlayer from 'react-audio-player';
 import logo from './logo.svg';
 import './App.css';
-
 
 class App extends Component {
   constructor(){
@@ -303,12 +303,25 @@ class App extends Component {
         	]
         }
     }
+    this.playNextSong = this.playNextSong.bind(this)
+    this.__getShowData = this.__getShowData.bind(this)
   }
 
-  //WillMount creates the fetch before the application is mounted for faster results
-  componentDidMount() {
-    console.log("Return from __getShowData");
-    console.log(this.__getShowData(this));
+  componentWillMount() {
+    this.__getShowData(this);
+  }
+
+    componentDidMount(){
+      var audio = document.getElementsByClassName('react-audio-player')[0];
+      audio.addEventListener("ended", this.playNextSong);
+    }
+
+    playNextSong(){
+      console.log("Playing Next Song")
+      var set = this.state.show.setList;
+      var s_index = Math.floor((Math.random() * set.length) + 1);
+      var src = 'http://archive.org/download/' + this.state.show.showUrl + '/' + this.state.show.setList[s_index].name;
+      this.setState({src: src, s_index: s_index});
     }
 
   __getShowData(app) {
@@ -330,8 +343,7 @@ class App extends Component {
            var src = 'http://archive.org/download/' + data.showUrl + '/' + data.setList[s_index].name;
            console.log("JSON Show Data")
            console.log(data);
-           app.setState({show: data, src: src, s_index: s_index}
-           );
+           app.setState({show: data, src: src, s_index: s_index});
          });
        }
 
@@ -347,10 +359,12 @@ class App extends Component {
           s_index={this.state.s_index}
         />
         <ReactAudioPlayer
+          id='audio'
           src={this.state.src}
           autoPlay
           controls
         />
+        <Controls playNextSong={this.playNextSong.bind(this)}/>
       </div>
     );
   }
