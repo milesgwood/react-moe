@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Player from './Components/Player';
+import SongInfo from './Components/SongInfo';
+import ReactAudioPlayer from 'react-audio-player';
 import logo from './logo.svg';
 import './App.css';
-import ReactAudioPlayer from 'react-audio-player';
 
 
 class App extends Component {
@@ -328,19 +328,12 @@ class App extends Component {
            var set = data.setList;
            var s_index = Math.floor((Math.random() * set.length) + 1);
            var src = 'http://archive.org/download/' + data.showUrl + '/' + data.setList[s_index].name;
-           //  var src = 'http://ia600303.us.archive.org/6/items/' + data.showUrl + '/' + data.setList[s_index].name;
-           // var src = "http://ia902603.us.archive.org/19/items/moe2014-12-30.tlm170.flac16/moe2014-12-30s2t05.flac"
            console.log("JSON Show Data")
            console.log(data);
            app.setState({show: data, src: src, s_index: s_index}
            );
          });
        }
-
-      //  Try to use this to play the audio directly
-       //https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-
-
 
   render() {
     return (
@@ -349,7 +342,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Listen to moe.</h2>
         </div>
-
+        <SongInfo
+          show={this.state.show}
+          s_index={this.state.s_index}
+        />
         <ReactAudioPlayer
           src={this.state.src}
           autoPlay
