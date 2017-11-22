@@ -319,7 +319,7 @@ class App extends Component {
     playNextSong(){
       console.log("Playing Next Song")
       var set = this.state.show.setList;
-      var s_index = Math.floor((Math.random() * set.length) + 1);
+      var s_index = (this.state.s_index + 1) % set.length;
       var src = 'http://archive.org/download/' + this.state.show.showUrl + '/' + this.state.show.setList[s_index].name;
       this.setState({src: src, s_index: s_index});
     }
