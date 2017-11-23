@@ -328,11 +328,7 @@ class App extends Component {
     fetch(
           `http://moebot.audio/justListen`,
           {   method: 'GET',
-              mode: 'basic',
-              headers: new Headers(
-                 {"Content-Type": "application/json",
-                  "Accept":"application/json"}
-              )
+              mode: 'cors',
            }
          ).then(function(response){
            console.log(response);

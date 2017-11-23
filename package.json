@@ -1,6 +1,6 @@
 {
   "name": "moe",
-  "homepage": "https://milesgwood.github.io/react-moe",
+  "homepage": "http://play.moebot.audio/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
