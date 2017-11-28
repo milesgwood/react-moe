@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SongInfo from './Components/SongInfo';
 import Controls from './Components/Controls';
 import ReactAudioPlayer from 'react-audio-player';
-import logo from './logo.svg';
+import logo from './moe_17_.svg';
 import './App.css';
 
 class App extends Component {
@@ -308,7 +308,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.__getShowData(this);
+      this.__getShowData(this);
   }
 
     componentDidMount(){
@@ -324,24 +324,42 @@ class App extends Component {
       this.setState({src: src, s_index: s_index});
     }
 
+  // This method needs to be broken up
   __getShowData(app) {
-    fetch(
-          `http://moebot.audio/justListen`,
-          {   method: 'GET',
-              mode: 'cors',
-           }
-         ).then(function(response){
-           console.log(response);
-           return response.json();
-         }).then(function(data) {
-           var set = data.setList;
-           var s_index = Math.floor((Math.random() * set.length) + 1);
-           var src = 'http://archive.org/download/' + data.showUrl + '/' + data.setList[s_index].name;
-           console.log("JSON Show Data")
-           console.log(data);
-           app.setState({show: data, src: src, s_index: s_index});
-         });
-       }
+      fetch(
+            `http://moebot.audio/justListen`,
+            {   method: 'GET',
+                mode: 'cors',
+             }
+           ).then(function(response){
+             console.log(response);
+             return response.json();
+           }).then(function(data) {
+                 try {
+                   var set = data.setList;
+                   var s_index = Math.floor((Math.random() * (set.length - 1)) + 1);
+                   var song = data.setList[s_index].name;
+                   if(song.endsWith(".shn")) throw new TypeError('We cannot play .shn files currently');
+                   var src = 'http://archive.org/download/' + data.showUrl + '/' + song;
+                   console.log("JSON Show Data")
+                   console.log(data);
+                   app.setState({show: data, src: src, s_index: s_index});
+                 }
+                 catch (e) {
+                   if (e instanceof TypeError) {
+                     console.log("Type Error in requested show");
+                     console.log("Index: " + s_index);
+                     console.log(e);
+                     app.__getShowData(app);
+                 }
+                 else {
+                   console.log("Uncaught Error");
+                   console.log(e);
+                 }
+                }
+           });
+         }
+
 
   render() {
     return (
